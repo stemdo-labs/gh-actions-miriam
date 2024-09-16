@@ -1,0 +1,39 @@
+name: CI Workflow for Development
+
+on:
+  push:
+    branches:
+      - development
+  pull_request:
+    branches:
+      - development
+
+jobs:
+  build:
+    uses: ./.github/workflows/reusable-build.yml
+    with:
+      node_version: '14'
+      environment: 'uat'
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: uat
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Log in to DockerHub
+        uses: ./.github/actions/docker-login
+
+      - name: Pull Docker Image from UAT
+        run: docker pull my-dockerhub-username/my-angular-app:${{ github.sha }}-uat
+
+      - name: Run Docker Container in UAT
+        run: docker run -d -p 80:80 my-dockerhub-username/my-angular-app:${{ github.sha }}-uat
+
+      - name: Check UAT Deployment
+        run: curl http://localhost
