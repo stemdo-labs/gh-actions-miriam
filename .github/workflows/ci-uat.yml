@@ -2,18 +2,18 @@ name: CI Workflow for Development
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - development
-  pull_request:
-    branches:
-      - development
+  # push:
+  #   branches:
+  #     - development
+  # pull_request:
+  #   branches:
+  #     - development
 
 jobs:
   build:
     uses: ./.github/workflows/reusable-build.yml
     with:
-      node_version: '14'
+      node_version: '18'
       environment: 'uat'
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}

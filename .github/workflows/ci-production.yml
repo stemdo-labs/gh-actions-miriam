@@ -2,12 +2,12 @@ name: CI Workflow for Production
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
+  # pull_request:
+  #   branches:
+  #     - main
 
 jobs:
   build:
@@ -37,7 +37,9 @@ jobs:
         run: docker pull miriamblanco/my-angular-app:${{ github.sha }}-production
 
       - name: Run Docker Container in Production
-        run: docker run -d -p 80:80 miriamblanco/my-angular-app:${{ github.sha }}-production
+        run: |
+          docker run -d -p 80:80 --name my-angular-app miriamblanco/my-angular-app:${{ github.sha }}-production
+          sleep 30  # Espera a que el contenedor se inicie
 
       - name: Check Production Deployment
         run: curl http://localhost
