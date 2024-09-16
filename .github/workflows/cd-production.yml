@@ -1,0 +1,28 @@
+name: CD Workflow for Production
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Log in to DockerHub
+        uses: ./.github/actions/docker-login
+
+      - name: Pull Docker Image from Production
+        run: docker pull my-dockerhub-username/my-angular-app:${{ github.sha }}-prod
+
+      - name: Run Docker Container in Production
+        run: docker run -d -p 80:80 my-dockerhub-username/my-angular-app:${{ github.sha }}-prod
+
+      - name: Check Production Deployment
+        run: curl http://localhost
