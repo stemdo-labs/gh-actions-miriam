@@ -22,7 +22,9 @@ jobs:
         run: docker pull miriamblanco/my-angular-app:${{ github.sha }}-production
 
       - name: Run Docker Container in Production
-        run: docker run -d -p 80:80 miriamblanco/my-angular-app:${{ github.sha }}-production
+        run: |
+          docker run -d -p 80:80 my-dockerhub-username/my-angular-app:${{ github.sha }}-prod
+          sleep 30 # Esperar 30 segundos para que el contenedor se inicie completamente
 
       - name: Check Production Deployment
         run: curl http://localhost
