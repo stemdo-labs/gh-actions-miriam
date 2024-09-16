@@ -18,13 +18,13 @@ jobs:
       - name: Log in to DockerHub
         uses: ./.github/actions/docker-login
 
+      - name: Pull Docker Image from Production
+        run: docker pull miriamblanco/my-angular-app:${{ github.sha }}-production
+
       - name: Run Docker Container in Production
         run: |
           docker run -d -p 80:80 my-dockerhub-username/my-angular-app:${{ github.sha }}-prod
           sleep 30 # Esperar 30 segundos para que el contenedor se inicie completamente
-
-      - name: Run Docker Container in Production
-        run: docker run -d -p 80:80 miriamblanco/my-angular-app:${{ github.sha }}-production
 
       - name: Check Production Deployment
         run: curl http://localhost
