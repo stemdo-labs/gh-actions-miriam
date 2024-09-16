@@ -1,7 +1,17 @@
-name: Docker Login
-description: Log in to DockerHub
+name: 'Docker Login'
+description: 'Log in to DockerHub'
+inputs:
+  username:
+    description: 'DockerHub username'
+    required: true
+  password:
+    description: 'DockerHub password'
+    required: true
 runs:
-  using: "composite" # Esto indica que es una acción compuesta, lo que permite combinar múltiples comandos en un solo archivo.
-  steps:
-  - run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-    shell: bash
+  using: 'docker'
+  image: 'docker:latest'
+  entrypoint: /bin/sh
+  args:
+  - '-c'
+  - |
+    echo "${{ inputs.password }}" | docker login -u "${{ inputs.username }}" --password-stdin
