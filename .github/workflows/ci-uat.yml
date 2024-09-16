@@ -31,10 +31,10 @@ jobs:
         uses: ./.github/actions/docker-login
 
       - name: Pull Docker Image from UAT
-        run: docker pull my-dockerhub-username/my-angular-app:${{ github.sha }}-uat
+        run: docker pull miriamblanco/my-angular-app:${{ github.sha }}-uat
 
       - name: Run Docker Container in UAT
-        run: docker run -d -p 80:80 my-dockerhub-username/my-angular-app:${{ github.sha }}-uat
+        run: docker run -d -p 80:80 miriamblanco/my-angular-app:${{ github.sha }}-uat
 
       - name: Check UAT Deployment
         run: curl http://localhost
