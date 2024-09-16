@@ -19,10 +19,10 @@ jobs:
         uses: ./.github/actions/docker-login
 
       - name: Pull Docker Image from Production
-        run: docker pull my-dockerhub-username/my-angular-app:${{ github.sha }}-prod
+        run: docker pull miriamblanco/my-angular-app:${{ github.sha }}-prod
 
       - name: Run Docker Container in Production
-        run: docker run -d -p 80:80 my-dockerhub-username/my-angular-app:${{ github.sha }}-prod
+        run: docker run -d -p 80:80 miriamblanco/my-angular-app:${{ github.sha }}-prod
 
       - name: Check Production Deployment
         run: curl http://localhost
