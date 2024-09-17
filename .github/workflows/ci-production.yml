@@ -41,5 +41,14 @@ jobs:
           docker run -d -p 80:80 --name my-angular-app miriamblanco/my-angular-app:${{ github.sha }}-production
           sleep 30  # Espera a que el contenedor se inicie
 
+      - name: List running containers
+        run: docker ps
+
+      - name: Check container logs
+        run: docker logs my-angular-app
+
+      - name: Verify service is running
+        run: docker exec my-angular-app curl http://localhost
+
       - name: Check Production Deployment
         run: curl http://localhost
