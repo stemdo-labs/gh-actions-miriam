@@ -4,6 +4,12 @@ WORKDIR /app
 COPY package*.json /app/
 RUN npm install
 COPY . /app
+
+# ARG para decidir si se ejecutan los tests
+ARG RUN_TESTS=false
+# Ejecuta los tests de cobertura si la variable RUN_TESTS está habilitada
+RUN if [ "$RUN_TESTS" = "true" ]; then npm run test -- --code-coverage --watch=false; fi
+
 RUN npm run build 
 
 # Stage 2, use the compiled app, ready for production with Nginx
