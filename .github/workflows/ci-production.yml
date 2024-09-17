@@ -13,7 +13,7 @@ jobs:
   build:
     uses: ./.github/workflows/reusable-build.yml
     with:
-      node_version: '18'
+      node_version: '20'
       environment: 'production'
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
