@@ -51,8 +51,8 @@ jobs:
       - name: List application files
         run: docker exec my-angular-app ls -l /usr/share/nginx/html
 
-      - name: Check NGINX error logs
-        run: docker exec my-angular-app cat /var/log/nginx/error.log
+      # - name: Check NGINX error logs
+      #   run: docker exec my-angular-app cat /var/log/nginx/error.log
 
       - name: Verify NGINX listening ports
         run: docker exec my-angular-app netstat -tuln | grep 80
