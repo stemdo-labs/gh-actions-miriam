@@ -34,7 +34,7 @@ jobs:
         run: docker pull miriamblanco/my-angular-app:${{ github.sha }}-uat
 
       - name: Run Docker Container in UAT
-        run: docker run -d -p 80:80 miriamblanco/my-angular-app:${{ github.sha }}-uat
+        run: docker run -d -p 8080:8080 miriamblanco/my-angular-app:${{ github.sha }}-uat
 
       - name: Check UAT Deployment
-        run: curl http://localhost
+        run: curl http://localhost:8080

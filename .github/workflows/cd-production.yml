@@ -27,8 +27,6 @@ jobs:
 
       - name: Run Docker Container in Production
         run: |
-          docker stop my-angular-app || true
-          docker rm my-angular-app || true
           docker run -d -p 8080:8080 --name my-angular-app miriamblanco/my-angular-app:${{ github.sha }}-production
           sleep 30  # Espera a que el contenedor se inicie
 
