@@ -2,9 +2,10 @@ name: CD Workflow for Production
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - main
+  workflow_run:
+    workflows: ["CI Workflow for Production"]
+    types:
+      - completed
 
 jobs:
   deploy:
@@ -23,8 +24,10 @@ jobs:
 
       - name: Run Docker Container in Production
         run: |
-          docker run -d -p 80:80 my-dockerhub-username/my-angular-app:${{ github.sha }}-prod
-          sleep 30 # Esperar 30 segundos para que el contenedor se inicie completamente
+          docker stop my-angular-app || true
+          docker rm my-angular-app || true
+          docker run -d -p 8080:8080 --name my-angular-app miriamblanco/my-angular-app:${{ github.sha }}-production
+          sleep 30  # Espera a que el contenedor se inicie
 
       - name: Check Production Deployment
         run: curl http://localhost

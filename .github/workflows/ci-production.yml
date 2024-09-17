@@ -19,53 +19,27 @@ jobs:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
-  deploy:
-    runs-on: ubuntu-latest
-    environment:
-      name: production
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   environment:
+  #     name: production
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
 
-      - name: Log in to DockerHub
-        uses: ./.github/actions/docker-login/
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+  #     - name: Log in to DockerHub
+  #       uses: ./.github/actions/docker-login/
+  #       with:
+  #         username: ${{ secrets.DOCKER_USERNAME }}
+  #         password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Pull Docker Image from Production
-        run: docker pull miriamblanco/my-angular-app:${{ github.sha }}-production
+  #     - name: Pull Docker Image from Production
+  #       run: docker pull miriamblanco/my-angular-app:${{ github.sha }}-production
 
-      - name: Run Docker Container in Production
-        run: |
-          docker run -d -p 8080:8080 --name my-angular-app miriamblanco/my-angular-app:${{ github.sha }}-production
-          sleep 30  # Espera a que el contenedor se inicie
+  #     - name: Run Docker Container in Production
+  #       run: |
+  #         docker run -d -p 8080:8080 --name my-angular-app miriamblanco/my-angular-app:${{ github.sha }}-production
+  #         sleep 30  # Espera a que el contenedor se inicie
 
-############### DEBUG ##########################
-      # - name: List running containers
-      #   run: docker ps
-
-      # - name: Check container logs
-      #   run: docker logs my-angular-app
-
-      # - name: List application files
-      #   run: docker exec my-angular-app ls -l /usr/share/nginx/html
-
-      # - name: Show NGINX default config
-      #   run: docker exec my-angular-app cat /etc/nginx/conf.d/default.conf
-
-      # # - name: Check NGINX error logs
-      # #   run: docker exec my-angular-app cat /var/log/nginx/error.log
-
-      # - name: Verify NGINX listening ports
-      #   run: docker exec my-angular-app netstat -tuln | grep 80
-
-      # - name: Test application from within container
-      #   run: docker exec my-angular-app curl http://127.0.0.1:80
-
-      # - name: Verify service is running
-      #   run: docker exec my-angular-app curl http://localhost
-###################################
-
-      - name: Check Production Deployment
-        run: curl http://localhost:8080
+  #     - name: Check Production Deployment
+  #       run: curl http://localhost:8080
