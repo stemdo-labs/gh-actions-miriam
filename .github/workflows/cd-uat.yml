@@ -1,0 +1,32 @@
+name: CD Workflow for uat
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["CI Workflow for uat"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+      runs-on: ubuntu-latest
+      environment:
+        name: uat
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+
+        - name: Log in to DockerHub
+          uses: ./.github/actions/docker-login
+          with:
+            username: ${{ secrets.DOCKER_USERNAME }}
+            password: ${{ secrets.DOCKER_PASSWORD }}
+
+        - name: Pull Docker Image from UAT
+          run: docker pull miriamblanco/my-angular-app:${{ github.sha }}-uat
+
+        - name: Run Docker Container in UAT
+          run: docker run -d -p 8080:8080 miriamblanco/my-angular-app:${{ github.sha }}-uat
+
+        - name: Check UAT Deployment
+          run: curl http://localhost:8080
