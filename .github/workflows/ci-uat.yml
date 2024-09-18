@@ -2,12 +2,12 @@ name: CI Workflow for uat
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - development
-  # pull_request:
-  #   branches:
-  #     - development
+  push:
+    branches:
+      - development
+  pull_request:
+    branches:
+      - development
 
 jobs:
   build:
