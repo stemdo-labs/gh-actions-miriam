@@ -1,37 +1,39 @@
-## Ejercicios de Github Actions  para iniciarse en el Mundo de DevOps
+# GitHub Actions (CI/CD)
 
-¡Bienvenido/a al ejercicio de Github Actions para iniciarse en el mundo de DevOps!
+En este ejercicio, se implementaron dos workflows principales para la Integración Continua (CI) y el Despliegue Continuo (CD) en un proyecto Angular con Docker, siguiendo los requerimientos establecidos. Aquí te detallo cómo se cumplieron los objetivos y requerimientos con dos entornos distintos ``uat`` y ``producción``.
 
-Este repositorio contiene un ejercicio diseñado para ayudarte a familiarizarte con __Github Actions__ y el __CI/CD__.
+## 1. Workflows implementados
 
-## Objetivos
+- CI para producción y uat
 
-El propósito principal de este ejercicio es _proporcionarte una introducción práctica a los conceptos de Github Actions_ que son esenciales para cualquier persona interesada en trabajar en el área de DevOps. Al completar estos ejercicios, esperamos que adquieras experiencia práctica con:
+    Los archivos ``ci-production.yml`` y ``ci-uat.yml`` son los workflows responsables de:
 
-- Workflows
-- Actions/ Custom Actions
-- Workflows reusables
-- Secrets y entornos
+    - Compilar la aplicación Angular.
+    - Construir la imagen Docker y subirla a DockerHub.
 
-## Estructura del Repositorio
+- CD para producción y uat
 
-En este repositorio encontraréis un proyecto básico de _Angular_. Para el cual tendréis que elaborar los workflows necesarios para la __Integración Continua__ y el __Despliegue Continuo (CI/CD)__.
+    Los archivos ``cd-production.yml`` y ``ci-uat.yml`` se encargan de:
 
-El workflow de __CI__ será el encargado de _realizar el build de la aplicación angular_, construir la imagen y subirla al registry. (Dockerhub)
+    - Descargar la imagen Docker desde DockerHub.
+    - Desplegar la aplicación en producción simulando una verificación mediante ``curl``.
 
-El workflow de __CD__ será el encargado de _bajar esa imagen y realizar el despliegue_. (Este despliegue lo simularemos haciendo un curl al html de la aplicación que sirve el nginx)
+## 2. Requerimientos y Cómo se Cumplieron
 
-La rama main/master será de desplegar en el entorno de production y la rama de development la usaremos para despliegues e integraciones continuas en uat.
+- **Uso de Triggers**:
+Se implementaron distintos triggers para disparar los workflows manualmente (workflow_dispatch) o al completar otro workflow (workflow_run). En este caso, el despliegue (CD) se dispara cuando el workflow de CI se completa. También se han usado los disparadores para cuando se hace una _pull_ o un _push_: en la rama ``main`` para el entorno de producción, y en la rama ``development`` para el entorno de uat.
 
-### Requerimientos
+- **Reusable Workflows**:
+Se creó un workflow reusable llamado ``reusable-build.yml`` que realiza los pasos de build y push a DockerHub. Este archivo es reutilizado tanto por el workflow de producción y el de uat, evitando así duplicar código.
 
-- Uso de distintos triggers
-- Uso de reusables (para entender cómo se pueden reusar workflows ya existentes, de esta manera no repetimos código ya escrito anteriormente.)
-- Uso de custom actions (composite)
-- Uso de variables y secrets de environments (en un entorno real, vas a encontrarte con distintas variables por entorno)
-- Job que simulen la ejecución de Test de Cobertura de Código (en un entorno profesional vas a encontrarte con test de código, nosotros tenemos que encargarnos de que se lleven a cabo) Estos jobs se ejecutarán solo si estamos en el entorno "production", no en el de "uat".
-- Uso de aprobadores por entornos. (Investigad)
+- **Custom Actions (Composite)**:
+Se ha desarrollado una acción personalizada para el login en DockerHub (docker-login) llamado ``action.yml``. Esto encapsula la lógica de autenticación y permite reutilizarla en múltiples workflows.
 
-## Contribución
+- **Variables y Secrets de Environments**:
+Se han utilizado ``secrets`` (como DOCKER_USERNAME y DOCKER_PASSWORD), que son referenciados en los workflows para gestionar la seguridad y mantener la flexibilidad según el ambiente de despliegue.
 
-¡Tus contribuciones son bienvenidas! Si tienes ideas para nuevos ejercicios o mejoras para los existentes, no dudes en abrir un issue o abrir un pull request.
+- **Test de Cobertura de Código (Solo en Producción)**:
+Se ha agregado un job en el archivo ``reusable-build.yml`` que simula la ejecución de tests de cobertura de código solo para el entorno de producción.
+
+- **Aprobadores por entornos**:
+En la creación de los entornos, se ha implementado para el entorno de producción una _Protection rules_ con la opción _Require approval_ habilitada, con lo cual cuando se ejecuta el CD de producción para realizar el despliegue, pide la aprobación de los usuarios asignados.
